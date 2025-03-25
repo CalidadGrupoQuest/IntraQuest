@@ -32,6 +32,7 @@
             height: 100px;
             object-fit: cover;
             margin-bottom: 15px;
+            /*Aca se mete para darle el contorno*/
             border-radius: 50%;
             border: 3px solid #6c4f3d;
         }
@@ -100,7 +101,7 @@
 <body>
 
 <div class="login-container">
-    <img src="Logo-web-blanco-2.png" alt="Logo" class="logo">  <!-- Asegúrate de cambiar la ruta por tu logo -->
+    <img src="Logo-web.png" alt="Logo" class="logo">  <!-- Asegúrate de cambiar la ruta por tu logo -->
     <h2 class="mb-4">Iniciar Sesión</h2>
     <form id="loginForm">
         <div class="mb-3 position-relative">
@@ -126,11 +127,11 @@
 
         // Simulación de usuario en una base de datos local
         const storedEmail = "admin@example.com";
-        const storedPasswordHash = btoa("123456");
+        const storedPasswordHash = btoa("nvKD:'vZLbc+^%26j1R!r(asP(|S:R");
 
         if (email === storedEmail && hashedPassword === storedPasswordHash) {
             alert("✅ Login exitoso");
-            window.location.href = "dashboard.html";
+            window.location.href = "SIC.html";
         } else {
             alert("❌ Credenciales incorrectas");
         }
