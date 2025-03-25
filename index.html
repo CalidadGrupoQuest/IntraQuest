@@ -117,26 +117,54 @@
 </div>
 
 <script>
-    document.getElementById("loginForm").addEventListener("submit", function(event) {
+    async function hashSHA256(text) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        return Array.from(new Uint8Array(hashBuffer))
+            .map(b => b.toString(16).padStart(2, "0"))
+            .join("");
+    }
+
+    async function savePassword() {
+        const storedPasswordKey = "storedPassword";
+        if (!localStorage.getItem(storedPasswordKey)) {
+            const initialPassword = "nvKD:'vZLbc+^%26j1R!r(asP(|S:R"; // Contraseña original
+            const hashedPassword = await hashSHA256(initialPassword);
+            localStorage.setItem(storedPasswordKey, hashedPassword);
+            console.log("Contraseña hasheada guardada en localStorage.");
+        }
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async function(event) {
         event.preventDefault();
+
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
-        // Simulación de una contraseña cifrada (Base64, solo para demostración)
-        const hashedPassword = btoa(password);
+        // Hashear la contraseña ingresada
+        const hashedPassword = await hashSHA256(password);
 
-        // Simulación de usuario en una base de datos local
-        const storedEmail = "admin@example.com";
-        const storedPasswordHash = btoa("nvKD:'vZLbc+^%26j1R!r(asP(|S:R");
+        // Obtener el hash almacenado en localStorage
+        const storedPasswordHash = localStorage.getItem("storedPassword");
 
-        if (email === storedEmail && hashedPassword === storedPasswordHash) {
+        console.log("Contraseña ingresada (SHA-256):", hashedPassword);
+        console.log("Contraseña almacenada (SHA-256):", storedPasswordHash);
+
+        if (!storedPasswordHash) {
+            alert("⚠ No hay contraseña almacenada en localStorage.");
+        } else if (hashedPassword === storedPasswordHash) {
             alert("✅ Login exitoso");
             window.location.href = "SIC.html";
         } else {
             alert("❌ Credenciales incorrectas");
         }
     });
+
+    // Llamar a la función para guardar la contraseña al cargar la página
+    savePassword();
 </script>
+
 
 </body>
 </html>
