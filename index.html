@@ -117,41 +117,53 @@
 </div>
 
 <script>
-    async function obtenerCredencialesDesdeTXT() {
-        try {
-            const response = await fetch("password.txt"); // Leer archivo en el servidor
-            if (!response.ok) throw new Error("No se pudo cargar el archivo");
+    // 🔒 Paso 1: Obtener credenciales desde password.txt
+async function obtenerCredencialesDesdeTXT() {
+    try {
+        const response = await fetch("password.txt"); // 🔹 Leer archivo en el servidor
+        if (!response.ok) throw new Error("No se pudo cargar el archivo");
 
-            const texto = await response.text();
-            const [usuarioAlmacenado, passwordAlmacenada] = texto.trim().split(", "); // Separar usuario y contraseña
-            return { usuarioAlmacenado, passwordAlmacenada };
-        } catch (error) {
-            console.error("Error al leer el archivo:", error);
-            return null;
-        }
+        const texto = await response.text();
+        const [usuarioAlmacenado, passwordAlmacenada] = texto.trim().split(", "); // 🔹 Separar usuario y contraseña
+        return { usuarioAlmacenado, passwordAlmacenada };
+    } catch (error) {
+        console.error("❌ Error al leer el archivo:", error);
+        return null;
+    }
+}
+
+// 🔒 Paso 2: Manejo del formulario de login
+document.getElementById("loginForm").addEventListener("submit", async function(event) {
+    event.preventDefault(); // 🔹 Evita que el formulario recargue la página
+
+    const emailIngresado = document.getElementById("email").value;
+    const passwordIngresada = document.getElementById("password").value;
+
+    const credenciales = await obtenerCredencialesDesdeTXT();
+    if (!credenciales) {
+        alert("⚠ Error al cargar las credenciales.");
+        return;
     }
 
-    document.getElementById("loginForm").addEventListener("submit", async function(event) {
-        event.preventDefault();
+    const { usuarioAlmacenado, passwordAlmacenada } = credenciales;
 
-        const emailIngresado = document.getElementById("email").value;
-        const passwordIngresada = document.getElementById("password").value;
+    if (emailIngresado === usuarioAlmacenado && passwordIngresada === passwordAlmacenada) {
+        alert("✅ Login exitoso");
 
-        const credenciales = await obtenerCredencialesDesdeTXT();
-        if (!credenciales) {
-            alert("⚠ Error al cargar las credenciales.");
-            return;
-        }
+        // 🔒 Paso 3: Guardar sesión en localStorage
+        localStorage.setItem("loggedIn", "true");
 
-        const { usuarioAlmacenado, passwordAlmacenada } = credenciales;
+        // 🔒 Paso 4: Redirigir a la página protegida
+        window.location.href = "SIC.html";
+    } else {
+        alert("❌ Usuario o contraseña incorrectos");
+    }
+});
 
-        if (emailIngresado === usuarioAlmacenado && passwordIngresada === passwordAlmacenada) {
-            alert("✅ Login exitoso");
-            window.location.href = "SIC.html";
-        } else {
-            alert("❌ Usuario o contraseña incorrectos");
-        }
-    });
+// 🔒 Paso 5: Proteger acceso directo a "SIC.html"
+if (window.location.pathname.includes("SIC.html") && localStorage.getItem("loggedIn") !== "true") {
+    window.location.href = "login.html"; // 🔹 Redirigir al login si no está autenticado
+}
 </script>
 
 
