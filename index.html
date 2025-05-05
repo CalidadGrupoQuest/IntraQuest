@@ -101,7 +101,7 @@
 <body>
 
 <div class="login-container">
-    <img src="Logo-web.png" alt="Logo" class="logo">  <!-- Asegúrate de cambiar la ruta por tu logo -->
+    <img src="Logo-web.png" alt="Logo" class="logo"> 
     <h2 class="mb-4">Iniciar Sesión</h2>
     <form id="loginForm">
         <div class="mb-3 position-relative">
@@ -117,14 +117,14 @@
 </div>
 
 <script>
-    // 🔒 Paso 1: Obtener credenciales desde password.txt
+    
 async function obtenerCredencialesDesdeTXT() {
     try {
-        const response = await fetch("password.txt"); // 🔹 Leer archivo en el servidor
+        const response = await fetch("password.txt"); // 
         if (!response.ok) throw new Error("No se pudo cargar el archivo");
 
         const texto = await response.text();
-        const [usuarioAlmacenado, passwordAlmacenada] = texto.trim().split(", "); // 🔹 Separar usuario y contraseña
+        const [usuarioAlmacenado, passwordAlmacenada] = texto.trim().split(", "); // 
         return { usuarioAlmacenado, passwordAlmacenada };
     } catch (error) {
         console.error("❌ Error al leer el archivo:", error);
@@ -132,9 +132,9 @@ async function obtenerCredencialesDesdeTXT() {
     }
 }
 
-// 🔒 Paso 2: Manejo del formulario de login
+
 document.getElementById("loginForm").addEventListener("submit", async function(event) {
-    event.preventDefault(); // 🔹 Evita que el formulario recargue la página
+    event.preventDefault(); 
 
     const emailIngresado = document.getElementById("email").value;
     const passwordIngresada = document.getElementById("password").value;
@@ -150,19 +150,19 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     if (emailIngresado === usuarioAlmacenado && passwordIngresada === passwordAlmacenada) {
         alert("✅ Login exitoso");
 
-        // 🔒 Paso 3: Guardar sesión en localStorage
+        
         localStorage.setItem("loggedIn", "true");
 
-        // 🔒 Paso 4: Redirigir a la página protegida
+        
         window.location.href = "IntraQuest.html";
     } else {
         alert("❌ Usuario o contraseña incorrectos");
     }
 });
 
-// 🔒 Paso 5: Proteger acceso directo a "IntraQuest.html"
+
 if (window.location.pathname.includes("IntraQuest.html") && localStorage.getItem("loggedIn") !== "true") {
-    window.location.href = "login.html"; // 🔹 Redirigir al login si no está autenticado
+    window.location.href = "login.html"; 
 }
 </script>
 
